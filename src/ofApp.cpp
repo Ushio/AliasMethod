@@ -18,8 +18,14 @@ public:
 		buckets.resize(N);
 		for (int i = 0; i < N; ++i) {
 			probs[i] = weights[i] / w_sum;
-			buckets[i].height = probs[i] * 4.0f;
+			buckets[i].height = probs[i] * N;
 		}
+
+		//float h_sum = 0.0f;
+		//for (int i = 0; i < N; ++i) {
+		//	h_sum += buckets[i].height;
+		//}
+		//float h_avg = h_sum / N;
 
 		std::stack<int> lower;
 		std::stack<int> upper;
@@ -202,10 +208,17 @@ void ofApp::draw(){
 
 	ImGui::Begin("settings", nullptr);
 
-	ImGui::SliderFloat("w[0]", &weights[0], 0.0f, 2.0f);
-	ImGui::SliderFloat("w[1]", &weights[1], 0.0f, 2.0f);
-	ImGui::SliderFloat("w[2]", &weights[2], 0.0f, 2.0f);
-	ImGui::SliderFloat("w[3]", &weights[3], 0.0f, 2.0f);
+	int count = weights.size();
+	ImGui::InputInt("N", &count);
+	count = glm::clamp(count, 0, 10);
+
+	weights.resize(count);
+
+	for (int i = 0; i < weights.size(); ++i) {
+		char label[16];
+		sprintf(label, "w[%d]", i);
+		ImGui::SliderFloat(label, &weights[i], 0.0f, 2.0f);
+	}
 
 	ImGui::End();
 }
